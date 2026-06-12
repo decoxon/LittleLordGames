@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Search from 'astro-pagefind/components/Search.astro';
+---
+
+<BaseLayout
+  title="Search"
+  description="Search every post on LittleLordGames."
+>
+  <h1>Search</h1>
+  <p class="search-intro">Full-text search across all posts.</p>
+  <Search
+    id="search"
+    className="pagefind-ui"
+    uiOptions={{ showImages: false, showSubResults: true, excerptLength: 25 }}
+  />
+</BaseLayout>
+
+<style>
+  .search-intro {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+</style>
+
+<style is:global>
+  /* Theme the Pagefind UI with our design tokens (both light + dark). */
+  .pagefind-ui {
+    --pagefind-ui-scale: 0.9;
+    --pagefind-ui-primary: var(--color-accent);
+    --pagefind-ui-text: var(--color-text);
+    --pagefind-ui-background: var(--color-surface);
+    --pagefind-ui-border: var(--color-border);
+    --pagefind-ui-tag: var(--color-surface-alt);
+    --pagefind-ui-border-width: 2px;
+    --pagefind-ui-border-radius: var(--radius);
+    --pagefind-ui-font: var(--font-body);
+  }
+  .pagefind-ui .pagefind-ui__result-title a {
+    font-family: var(--font-pixel-soft);
+  }
+</style>

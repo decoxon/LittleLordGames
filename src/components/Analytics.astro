@@ -1,0 +1,19 @@
+---
+import { SITE } from '../site.config';
+
+// GoatCounter — privacy-friendly, cookieless. Emits nothing until a site code
+// is configured in src/site.config.ts, so no cookie-consent banner is needed.
+const code = SITE.goatCounterCode;
+const endpoint = code ? `https://${code}.goatcounter.com/count` : null;
+---
+
+{
+  endpoint && (
+    <script
+      is:inline
+      data-goatcounter={endpoint}
+      async
+      src="//gc.zgo.at/count.js"
+    />
+  )
+}

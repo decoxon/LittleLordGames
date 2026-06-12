@@ -1,0 +1,58 @@
+---
+import { SITE } from '../site.config';
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner container container--wide">
+    <p class="site-footer__brand">{SITE.title}</p>
+    <nav class="site-footer__links" aria-label="Footer">
+      <a href="/">Home</a>
+      <a href="/tags/">Tags</a>
+      <a href={SITE.ebayStoreUrl} target="_blank" rel="noopener noreferrer">Store ↗</a>
+      <a href="/rss.xml">RSS</a>
+    </nav>
+    <p class="site-footer__meta">© {year} {SITE.title}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-chrome-bg);
+    color: var(--color-chrome-text);
+    border-top: 3px solid var(--color-chrome-accent);
+    margin-top: var(--space-12);
+  }
+  .site-footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block: var(--space-6);
+  }
+  .site-footer__brand {
+    font-family: var(--font-pixel);
+    font-size: 0.8rem;
+    margin: 0;
+  }
+  .site-footer__links {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+  .site-footer__links a {
+    font-family: var(--font-pixel-soft);
+    font-size: 0.8rem;
+    color: var(--color-chrome-text);
+    text-decoration: none;
+  }
+  .site-footer__links a:hover {
+    color: var(--color-chrome-accent);
+  }
+  .site-footer__meta {
+    font-size: var(--text-sm);
+    color: var(--color-chrome-accent);
+    margin: 0;
+  }
+</style>

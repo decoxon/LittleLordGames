@@ -1,0 +1,70 @@
+name: Build & Deploy
+
+# Builds the static site and deploys it to the IIS web root via FTPS.
+#   - push:     publish immediately on commit to the canonical branch
+#   - schedule: daily rebuild so future-dated posts go live within ~24h
+#   - dispatch: manual run; tick `dry_run` for a no-op sync (use this to
+#               verify the sibling-folder exclusions before the first deploy)
+#
+# ⚠ This deploys to the SHARED web root that also contains the sibling apps
+#   `pythia/` and `rules_staging/`. The unique `state-name` + `exclude`
+#   patterns below ensure their files are never touched.
+on:
+  push:
+    # TODO(owner): trim to whichever is canonical once confirmed (main vs master).
+    branches: [main, master]
+  schedule:
+    - cron: '0 5 * * *' # 05:00 UTC daily
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (sync nothing — verify excludes only)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-blog
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site (Astro + Pagefind index)
+        run: npm run build
+
+      - name: Deploy to IIS web root via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: wsuk36.pronameserver.com
+          username: ${{ secrets.FTPS_USER }}
+          password: ${{ secrets.FTPS_PASS }}
+          protocol: ftps
+          server-dir: /littlelord/wwwroot/
+          local-dir: dist/
+          # Blog-specific sync-state file so this deploy only ever tracks (and
+          # therefore only ever deletes) its OWN files — never pythia's.
+          state-name: .ftp-deploy-sync-state-blog.json
+          dry-run: ${{ github.event.inputs.dry_run == 'true' }}
+          # exclude also protects matching REMOTE paths from deletion.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            pythia/**
+            rules_staging/**

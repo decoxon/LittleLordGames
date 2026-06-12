@@ -1,0 +1,42 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import TagSidebar from '../components/TagSidebar.astro';
+import Pagination from '../components/Pagination.astro';
+import { getPublishedPosts, getAllTags, POSTS_PER_PAGE } from '../lib/posts';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getPublishedPosts();
+  return paginate(posts, { pageSize: POSTS_PER_PAGE });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
+const tags = await getAllTags();
+const pageUrl = (n: number) => (n === 1 ? '/' : `/${n}/`);
+const onFirstPage = page.currentPage === 1;
+---
+
+<BaseLayout
+  wide
+  title={onFirstPage ? undefined : `Page ${page.currentPage}`}
+>
+  <div class="feed-layout">
+    <div class="feed">
+      <h1 class="feed__title">Latest posts</h1>
+      {
+        page.data.length === 0 ? (
+          <p>No posts yet — check back soon.</p>
+        ) : (
+          page.data.map((post) => <PostCard post={post} />)
+        )
+      }
+      <Pagination
+        currentPage={page.currentPage}
+        lastPage={page.lastPage}
+        pageUrl={pageUrl}
+      />
+    </div>
+    <TagSidebar tags={tags} />
+  </div>
+</BaseLayout>

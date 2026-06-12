@@ -1,0 +1,53 @@
+---
+import { tagSlug } from '../lib/posts';
+
+interface Props {
+  tag: string;
+  count?: number;
+  active?: boolean;
+}
+const { tag, count, active = false } = Astro.props;
+---
+
+<a
+  class:list={['chip', { 'chip--active': active }]}
+  href={`/tags/${tagSlug(tag)}/`}
+  aria-current={active ? 'page' : undefined}
+>
+  <span class="chip__hash" aria-hidden="true">#</span>{tag}{
+    count !== undefined && <span class="chip__count">{count}</span>
+  }
+</a>
+
+<style>
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    font-family: var(--font-pixel-soft);
+    font-size: 0.7rem;
+    line-height: 1;
+    text-decoration: none;
+    padding: 0.4em 0.6em;
+    border-radius: var(--radius);
+    background: var(--color-chip-bg);
+    color: var(--color-chip-text);
+    border: var(--border-width) solid transparent;
+  }
+  .chip:hover {
+    color: var(--color-chip-text);
+    border-color: var(--color-accent);
+  }
+  .chip--active {
+    border-color: var(--color-accent);
+    outline: 2px solid var(--color-accent);
+  }
+  .chip__hash {
+    opacity: 0.7;
+  }
+  .chip__count {
+    font-size: 0.85em;
+    opacity: 0.75;
+    padding-left: 0.2em;
+  }
+</style>

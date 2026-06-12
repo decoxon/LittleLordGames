@@ -1,0 +1,68 @@
+---
+import TagChip from './TagChip.astro';
+
+interface Props {
+  tags: { tag: string; count: number }[];
+  /** The currently active tag (original display string), if on a tag page. */
+  activeTag?: string;
+}
+const { tags, activeTag } = Astro.props;
+---
+
+<aside class="tag-sidebar" aria-label="Filter by tag">
+  <h2 class="tag-sidebar__title">Tags</h2>
+  <a
+    class:list={['tag-sidebar__all', { 'tag-sidebar__all--active': !activeTag }]}
+    href="/"
+    aria-current={!activeTag ? 'page' : undefined}>All posts</a
+  >
+  <ul class="tag-sidebar__list">
+    {
+      tags.map(({ tag, count }) => (
+        <li>
+          <TagChip tag={tag} count={count} active={tag === activeTag} />
+        </li>
+      ))
+    }
+  </ul>
+</aside>
+
+<style>
+  .tag-sidebar {
+    position: sticky;
+    top: var(--space-4);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+  }
+  .tag-sidebar__title {
+    font-size: 0.85rem;
+    margin: 0 0 var(--space-3);
+  }
+  .tag-sidebar__all {
+    display: inline-block;
+    font-family: var(--font-pixel-soft);
+    font-size: 0.72rem;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-3);
+  }
+  .tag-sidebar__all--active {
+    color: var(--color-accent);
+  }
+  .tag-sidebar__list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+  }
+
+  @media (max-width: 52rem) {
+    .tag-sidebar {
+      position: static;
+    }
+  }
+</style>

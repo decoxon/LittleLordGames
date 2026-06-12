@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 — Not found" description="That page wandered off the board.">
+  <section class="notfound">
+    <p class="notfound__code">404</p>
+    <h1 class="notfound__title">Page not found</h1>
+    <p>This one wandered off the board.</p>
+    <p><a href="/">← Back to the feed</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    text-align: center;
+    padding-block: var(--space-12);
+  }
+  .notfound__code {
+    font-family: var(--font-pixel);
+    font-size: clamp(3rem, 2rem + 8vw, 6rem);
+    color: var(--color-accent);
+    margin: 0;
+  }
+  .notfound__title {
+    margin-top: var(--space-4);
+  }
+</style>

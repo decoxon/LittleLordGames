@@ -1,0 +1,100 @@
+---
+import { SITE } from '../site.config';
+import ThemeToggle from './ThemeToggle.astro';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="site-header__inner container container--wide">
+    <a class="brand" href="/" aria-label={`${SITE.title} — home`}>
+      <img class="brand__logo" src="/logo.png" width="40" height="40" alt="" />
+      <span class="brand__name">{SITE.title}</span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a class="nav__link" href="/" aria-current={isActive('/') ? 'page' : undefined}>Home</a>
+      <a class="nav__link" href="/tags/" aria-current={isActive('/tags') ? 'page' : undefined}>Tags</a>
+      <a
+        class="nav__link"
+        href={SITE.ebayStoreUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+      >Store <span class="nav__ext" aria-hidden="true">↗</span></a>
+      <a class="nav__link nav__link--icon" href="/search/" aria-label="Search">
+        <span aria-hidden="true">⌕</span>
+      </a>
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--color-chrome-bg);
+    color: var(--color-chrome-text);
+    border-bottom: 3px solid var(--color-chrome-accent);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-block: var(--space-3);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-chrome-text);
+    text-decoration: none;
+  }
+  .brand__logo {
+    image-rendering: pixelated;
+    display: block;
+  }
+  .brand__name {
+    font-family: var(--font-pixel);
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .nav__link {
+    font-family: var(--font-pixel-soft);
+    font-size: 0.8rem;
+    color: var(--color-chrome-text);
+    text-decoration: none;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius);
+  }
+  .nav__link:hover,
+  .nav__link[aria-current='page'] {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--color-chrome-accent);
+  }
+  .nav__link--icon {
+    font-size: 1.2rem;
+    line-height: 1;
+    padding-inline: var(--space-2);
+  }
+  .nav__ext {
+    font-size: 0.7em;
+  }
+
+  @media (max-width: 32rem) {
+    .brand__name {
+      font-size: 0.7rem;
+    }
+    .nav__link {
+      font-size: 0.7rem;
+      padding-inline: var(--space-2);
+    }
+  }
+</style>

@@ -1,0 +1,93 @@
+/*
+ * Design tokens — palette sampled from the LittleLord pixel logo
+ * (teal/mint creature, bone-tan horn, lime accent, dark outline).
+ *
+ * Brand scale is theme-independent; semantic tokens below remap per theme.
+ * Dark mode is applied via [data-theme="dark"] on <html>.
+ */
+:root {
+  /* --- brand scale (from the logo) --- */
+  --mint: #7fccb8;
+  --mint-bright: #9fe0cd;
+  --deep-teal: #2f6d63;
+  --deep-teal-dark: #1f4a44;
+  --ink: #1a2e2b;
+  --bone: #d8c9a3;
+  --lime: #9bd64a;
+  --lime-dark: #6fae2b;
+  --night: #0e1513;
+
+  /* --- typography --- */
+  --font-pixel: 'Press Start 2P', monospace; /* logo, H1-H2, tag chips */
+  --font-pixel-soft: 'Silkscreen', 'Press Start 2P', monospace; /* nav / UI chrome */
+  --font-body: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI',
+    sans-serif; /* post body + captions (must stay legible) */
+
+  /* fluid type scale for readable body copy */
+  --text-sm: 0.875rem;
+  --text-base: 1.05rem;
+  --text-lg: 1.2rem;
+  --text-xl: clamp(1.35rem, 1.1rem + 1.2vw, 1.75rem);
+  --text-2xl: clamp(1.6rem, 1.2rem + 2vw, 2.4rem);
+  --leading-body: 1.7;
+
+  /* --- spacing / shape --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --radius: 6px;
+  --radius-lg: 10px;
+  --content-width: 46rem;
+  --wide-width: 64rem;
+  --border-width: 2px;
+
+  /* --- semantic tokens: LIGHT --- */
+  --color-bg: #fbfcf9;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f1f6f3;
+  --color-text: var(--ink);
+  --color-text-muted: #4a5c58;
+  --color-heading: var(--deep-teal-dark);
+  --color-accent: var(--deep-teal);
+  --color-link: #1d6a5d;
+  --color-link-hover: var(--lime-dark);
+  --color-border: #d6e2dd;
+  --color-shadow: rgba(26, 46, 43, 0.12);
+
+  /* chrome = header/nav/footer/tag chips (pixel-styled) */
+  --color-chrome-bg: var(--deep-teal-dark);
+  --color-chrome-text: #eaf6f1;
+  --color-chrome-accent: var(--mint-bright);
+  --color-chip-bg: var(--mint);
+  --color-chip-text: #123029;
+
+  --color-focus: var(--lime-dark);
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --color-bg: var(--night);
+  --color-surface: #16211e;
+  --color-surface-alt: #1d2c28;
+  --color-text: #e6f0ec;
+  --color-text-muted: #a3b8b1;
+  --color-heading: var(--mint-bright);
+  --color-accent: var(--mint);
+  --color-link: #9fe0cd;
+  --color-link-hover: var(--lime);
+  --color-border: #2a423b;
+  --color-shadow: rgba(0, 0, 0, 0.4);
+
+  --color-chrome-bg: #0a100e;
+  --color-chrome-text: #dcefe7;
+  --color-chrome-accent: var(--mint-bright);
+  --color-chip-bg: #214a41;
+  --color-chip-text: #c7f0e3;
+
+  --color-focus: var(--lime);
+  color-scheme: dark;
+}

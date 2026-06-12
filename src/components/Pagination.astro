@@ -1,0 +1,115 @@
+---
+interface Props {
+  currentPage: number;
+  lastPage: number;
+  /** Maps a 1-based page number to its URL. */
+  pageUrl: (n: number) => string;
+}
+const { currentPage, lastPage, pageUrl } = Astro.props;
+
+// Numbered window: first, last, and current ±1, with gaps marked as ellipsis.
+const numbers: (number | 'gap')[] = [];
+if (lastPage > 1) {
+  for (let n = 1; n <= lastPage; n++) {
+    if (n === 1 || n === lastPage || Math.abs(n - currentPage) <= 1) {
+      numbers.push(n);
+    } else if (numbers[numbers.length - 1] !== 'gap') {
+      numbers.push('gap');
+    }
+  }
+}
+---
+
+{
+  lastPage > 1 && (
+    <nav class="pager" aria-label="Pagination">
+      {currentPage > 1 ? (
+        <a class="pager__step" href={pageUrl(currentPage - 1)} rel="prev">
+          ← Prev
+        </a>
+      ) : (
+        <span class="pager__step pager__step--off">← Prev</span>
+      )}
+
+      <ol class="pager__list">
+        {numbers.map((n) =>
+          n === 'gap' ? (
+            <li class="pager__gap" aria-hidden="true">
+              …
+            </li>
+          ) : (
+            <li>
+              {n === currentPage ? (
+                <span class="pager__num pager__num--current" aria-current="page">
+                  {n}
+                </span>
+              ) : (
+                <a class="pager__num" href={pageUrl(n)}>
+                  {n}
+                </a>
+              )}
+            </li>
+          )
+        )}
+      </ol>
+
+      {currentPage < lastPage ? (
+        <a class="pager__step" href={pageUrl(currentPage + 1)} rel="next">
+          Next →
+        </a>
+      ) : (
+        <span class="pager__step pager__step--off">Next →</span>
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block: var(--space-8) var(--space-4);
+    font-family: var(--font-pixel-soft);
+    font-size: 0.8rem;
+  }
+  .pager__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pager__num,
+  .pager__step {
+    display: inline-grid;
+    place-items: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding-inline: 0.5em;
+    text-decoration: none;
+    color: var(--color-text);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius);
+  }
+  .pager__num:hover,
+  .pager__step:hover {
+    border-color: var(--color-accent);
+    color: var(--color-link-hover);
+  }
+  .pager__num--current {
+    background: var(--color-accent);
+    color: var(--color-chrome-text);
+    border-color: var(--color-accent);
+  }
+  .pager__step--off {
+    opacity: 0.4;
+  }
+  .pager__gap {
+    padding-inline: 0.25em;
+    color: var(--color-text-muted);
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+// Light/dark toggle. The no-flash init runs in BaseLayout's <head> before paint;
+// this handles the click, persistence, and aria-pressed state only.
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  class="theme-toggle"
+  aria-label="Toggle dark mode"
+  title="Toggle dark mode"
+>
+  <span class="theme-toggle__moon" aria-hidden="true">☾</span>
+  <span class="theme-toggle__sun" aria-hidden="true">☀</span>
+</button>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    function sync() {
+      btn.setAttribute(
+        'aria-pressed',
+        String(document.documentElement.dataset.theme === 'dark')
+      );
+    }
+    sync();
+    btn.addEventListener('click', function () {
+      var isDark = document.documentElement.dataset.theme === 'dark';
+      if (isDark) {
+        delete document.documentElement.dataset.theme;
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.dataset.theme = 'dark';
+        localStorage.setItem('theme', 'dark');
+      }
+      sync();
+    });
+  })();
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--color-chrome-text);
+    background: transparent;
+    border: var(--border-width) solid var(--color-chrome-accent);
+    border-radius: var(--radius);
+  }
+  .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  /* Light mode shows the moon (switch to dark); dark mode shows the sun. */
+  .theme-toggle__sun {
+    display: none;
+  }
+  :global(html[data-theme='dark']) .theme-toggle__moon {
+    display: none;
+  }
+  :global(html[data-theme='dark']) .theme-toggle__sun {
+    display: inline;
+  }
+</style>

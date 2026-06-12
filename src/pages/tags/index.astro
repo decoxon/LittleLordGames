@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagChip from '../../components/TagChip.astro';
+import { getAllTags } from '../../lib/posts';
+
+const tags = await getAllTags();
+---
+
+<BaseLayout title="Tags" description="Browse all topics on LittleLordGames.">
+  <h1>Tags</h1>
+  <p>Reviews and progress logs share one feed — pick a tag to filter.</p>
+  {
+    tags.length === 0 ? (
+      <p>No tags yet.</p>
+    ) : (
+      <ul class="tag-cloud">
+        {tags.map(({ tag, count }) => (
+          <li>
+            <TagChip tag={tag} count={count} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .tag-cloud {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin: var(--space-6) 0;
+    padding: 0;
+  }
+</style>
