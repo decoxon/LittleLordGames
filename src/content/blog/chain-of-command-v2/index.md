@@ -5,7 +5,7 @@ tags:
   - review
   - wargaming
 excerpt: First impressions of the second edition — the book, and how the game plays.
-draft: true
+draft: false
 ---
 
 Too Fat Lardies' *Chain of Command* has been one of the cornerstones of platoon-level World War II gaming since it first appeared back in 2010, and 2025 finally brought us a second edition. Rather than tearing the original up and starting again, this is very much the same game given a thorough polish — the rough edges sanded down, fifteen years of forum errata and handbook ideas folded back into the core book. I've now spent enough time with it, both reading and on the table, to put down some honest impressions.
