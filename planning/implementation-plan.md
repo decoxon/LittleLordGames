@@ -135,7 +135,7 @@ Shared content filter used by every listing/feed/index:
 
 ## 7. Analytics
 
-- GoatCounter cookieless script injected by an `Analytics.astro` component, gated on a `SITE.goatCounterCode` config value.
+- GoatCounter cookieless script injected by an `Analytics.astro` component, gated on a `SITE.goatCounterAccount` config value.
 - Empty/placeholder by default → no script emitted until owner supplies the code. No cookie-consent banner needed.
 
 ---

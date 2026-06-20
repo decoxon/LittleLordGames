@@ -12,10 +12,11 @@ export const SITE = {
   /** Outbound eBay store (opens in a new tab). No on-site commerce. */
   ebayStoreUrl: 'https://www.ebay.co.uk/usr/littlelordgames',
   /**
-   * GoatCounter site code for cookieless analytics. Leave empty to emit no
-   * script. Set to your code (the `<code>` in `<code>.goatcounter.com`) to enable.
+   * GoatCounter account for cookieless analytics. Leave empty to emit no
+   * script. Set to your account (the `<account>` in `<account>.goatcounter.com`)
+   * to enable.
    */
-  goatCounterCode: '<script data-goatcounter="https://littlelordgames.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>',
+  goatCounterAccount: 'littlelordgames',
   /** Numbered pagination size for the home + tag feeds. */
   postsPerPage: 10,
   /** Default social-preview image (in /public), used when a post has no hero. */

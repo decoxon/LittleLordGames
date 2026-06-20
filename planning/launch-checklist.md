@@ -1,36 +1,22 @@
 # Launch checklist
 
-The site is built and verified locally. These remaining items need GitHub access
-and owner decisions — the repo is **not yet connected to GitHub**.
-
-## Before the first deploy
-
-- [ ] **Create the GitHub repo** and push this code to it.
-- [ ] **Confirm the canonical branch.** This repo is currently on `master`; the
-      deploy workflow triggers on both `main` and `master` for now. Pick one and
-      trim `branches:` in `.github/workflows/deploy.yml`.
-- [ ] **Add repository secrets** (Settings → Secrets and variables → Actions):
-  - `FTPS_USER` — same FTPS user as the pythia deploy
-  - `FTPS_PASS` — same FTPS password
-- [ ] **⚠ Verify sibling-folder safety** (the blog deploys to the shared web root
-      that also holds `pythia/` and `rules_staging/`):
-  1. Run the **Build & Deploy** workflow manually (Actions → Run workflow) with
-     **`dry_run` ticked**.
-  2. Read the FTP-Deploy-Action log and confirm it lists **no deletions** under
-     `pythia/` or `rules_staging/` (it shouldn't — the blog-specific
-     `state-name` and `exclude` patterns prevent it).
-  3. Only after that looks clean, run it again with `dry_run` unticked (or push)
-     for the real deploy.
+The site is live: connected to GitHub, deploying to the IIS web root via FTPS,
+and publishing on push. The pre-launch blockers below are all complete.
 
 ## Optional / when ready
 
-- [ ] **GoatCounter:** create a site, then set `goatCounterCode` in
-      `src/site.config.ts` to enable cookieless analytics.
 - [ ] **Default OG image:** `public/og-default.png` is currently the logo art —
       swap for a wider branded card if desired (used when a post has no hero).
 
-## Already done
+## Done
 
+- ✅ **GitHub repo** created and pushed (`decoxon/LittleLordGames`).
+- ✅ **Canonical branch** confirmed `main`; deploy workflow trimmed to
+      `branches: [main]`.
+- ✅ **Repository secrets** (`FTPS_USER`, `FTPS_PASS`) added.
+- ✅ **Sibling-folder safety** verified — deploys to the shared web root leave
+      `pythia/` and `rules_staging/` untouched.
+- ✅ **GoatCounter** enabled (`goatCounterAccount` set in `src/site.config.ts`).
 - ✅ Astro site: feed (10/page) + tag sidebar, post pages, tag pages, 404
 - ✅ Image optimization (responsive WebP) + Markdown captions
 - ✅ Client-side Pagefind search (post bodies only)
