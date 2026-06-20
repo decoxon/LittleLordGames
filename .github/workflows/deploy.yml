@@ -11,8 +11,7 @@ name: Build & Deploy
 #   patterns below ensure their files are never touched.
 on:
   push:
-    # TODO(owner): trim to whichever is canonical once confirmed (main vs master).
-    branches: [main, master]
+    branches: [main]
   schedule:
     - cron: '0 5 * * *' # 05:00 UTC daily
   workflow_dispatch:

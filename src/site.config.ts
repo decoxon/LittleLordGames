@@ -15,7 +15,7 @@ export const SITE = {
    * GoatCounter site code for cookieless analytics. Leave empty to emit no
    * script. Set to your code (the `<code>` in `<code>.goatcounter.com`) to enable.
    */
-  goatCounterCode: '',
+  goatCounterCode: '<script data-goatcounter="https://littlelordgames.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>',
   /** Numbered pagination size for the home + tag feeds. */
   postsPerPage: 10,
   /** Default social-preview image (in /public), used when a post has no hero. */
