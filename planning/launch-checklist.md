@@ -3,10 +3,7 @@
 The site is live: connected to GitHub, deploying to the IIS web root via FTPS,
 and publishing on push. The pre-launch blockers below are all complete.
 
-## Optional / when ready
-
-- [ ] **Default OG image:** `public/og-default.png` is currently the logo art —
-      swap for a wider branded card if desired (used when a post has no hero).
+All launch and optional items are complete.
 
 ## Done
 
@@ -17,6 +14,8 @@ and publishing on push. The pre-launch blockers below are all complete.
 - ✅ **Sibling-folder safety** verified — deploys to the shared web root leave
       `pythia/` and `rules_staging/` untouched.
 - ✅ **GoatCounter** enabled (`goatCounterAccount` set in `src/site.config.ts`).
+- ✅ **Branded OG card** — `public/og-default.png` is a 1200×630 social card
+      (brand logo + "Little Lord Games" wordmark on deep teal).
 - ✅ Astro site: feed (10/page) + tag sidebar, post pages, tag pages, 404
 - ✅ Image optimization (responsive WebP) + Markdown captions
 - ✅ Client-side Pagefind search (post bodies only)
