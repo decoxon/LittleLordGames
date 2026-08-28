@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      eBay OAuth redirect/callback page for the Lister desktop app.
+
+      Contract and behaviour: docs/reference/hosted-oauth-pages.md in the Lister
+      repo. Registered in the eBay developer portal (both keysets) as BOTH the
+      "Auth accepted URL" and the "Auth declined URL", so every branch below has
+      to degrade gracefully.
+
+      HARD RULE: this file is deliberately standalone and lives in public/ so the
+      Astro pipeline never touches it. No external scripts, fonts, styles, images
+      or analytics; nothing is ever sent anywhere. The authorization code is only
+      ever (a) shown for the user to copy and (b) carried in a top-level
+      navigation to the app's loopback listener on 127.0.0.1.
+    -->
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!--
+      frame-ancestors is header-only (ignored in a meta CSP) — it is set
+      alongside X-Frame-Options in public/web.config.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'"
+    />
+    <link rel="icon" href="data:," />
+    <title>Lister — eBay sign-in</title>
+    <style>
+      /* Palette mirrors src/styles/tokens.css. Hard-coded (not imported) so the
+         page stays a single self-contained document; system fonts only, since
+         the site's webfonts would be an external-ish request. */
+      :root {
+        --bg: #fbfcf9;
+        --surface: #ffffff;
+        --surface-alt: #f1f6f3;
+        --text: #1a2e2b;
+        --muted: #4a5c58;
+        --heading: #1f4a44;
+        --accent: #2f6d63;
+        --border: #d6e2dd;
+        --focus: #6fae2b;
+        color-scheme: light;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e1513;
+          --surface: #16211e;
+          --surface-alt: #1d2c28;
+          --text: #e6f0ec;
+          --muted: #a3b8b1;
+          --heading: #9fe0cd;
+          --accent: #7fccb8;
+          --border: #2a423b;
+          --focus: #9bd64a;
+          color-scheme: dark;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        font-size: 1.05rem;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 34rem;
+        padding: clamp(1.25rem, 1rem + 2vw, 2rem);
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+      }
+
+      .brand {
+        margin: 0 0 1.5rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+
+      h1 {
+        margin: 0 0 1rem;
+        font-size: clamp(1.4rem, 1.15rem + 1.2vw, 1.8rem);
+        line-height: 1.3;
+        color: var(--heading);
+      }
+
+      p {
+        margin: 0 0 1rem;
+      }
+
+      .muted {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .code {
+        display: block;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background: var(--surface-alt);
+        border: 2px solid var(--border);
+        border-radius: 6px;
+        font-family: ui-monospace, 'SFMono-Regular', 'Consolas', monospace;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        word-break: break-all;
+        user-select: all;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      button {
+        font: inherit;
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
+        color: var(--surface);
+        background: var(--accent);
+        border: 2px solid var(--accent);
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      button.secondary {
+        color: var(--accent);
+        background: transparent;
+      }
+
+      button:hover {
+        opacity: 0.85;
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 2px;
+      }
+
+      a {
+        color: var(--accent);
+        text-underline-offset: 0.15em;
+      }
+
+      .status {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <p class="brand">LittleLordGames · Lister</p>
+      <div id="app"><h1>Working…</h1></div>
+    </main>
+
+    <script>
+      (function () {
+        'use strict';
+
+        var app = document.getElementById('app');
+        var params = new URLSearchParams(location.search);
+        // Kept before the address bar is stripped: the loopback handoff forwards
+        // the query string verbatim so code/state/expires_in reach the app.
+        var originalQuery = location.search;
+
+        var code = params.get('code');
+        var error = params.get('error');
+        var errorDescription = params.get('error_description');
+
+        /**
+         * Reads the loopback port out of the base64url JSON `state` the app
+         * built. Anything unexpected means manual-paste mode, never a throw.
+         * The port is validated to a plain integer in the non-privileged range
+         * before it is allowed anywhere near a URL string.
+         */
+        function readPort(rawState) {
+          if (!rawState) return null;
+          try {
+            var b64 = rawState.replace(/-/g, '+').replace(/_/g, '/');
+            while (b64.length % 4) b64 += '=';
+            var state = JSON.parse(atob(b64));
+            if (!state || state.v !== 1) return null;
+            var port = state.port;
+            if (typeof port !== 'number' || !isFinite(port)) return null;
+            if (Math.floor(port) !== port) return null;
+            if (port < 1024 || port > 65535) return null;
+            return port;
+          } catch (e) {
+            return null;
+          }
+        }
+
+        var port = readPort(params.get('state'));
+        var loopbackUrl = port
+          ? 'http://127.0.0.1:' + port + '/callback' + originalQuery
+          : null;
+
+        // Drop code/state from the address bar and from history. Done after the
+        // loopback URL is built, so the handoff still carries the full query.
+        try {
+          history.replaceState(null, '', location.pathname);
+        } catch (e) {}
+
+        function el(tag, text, className) {
+          var node = document.createElement(tag);
+          if (text) node.textContent = text; // never innerHTML: values come from the URL
+          if (className) node.className = className;
+          return node;
+        }
+
+        function render(nodes) {
+          while (app.firstChild) app.removeChild(app.firstChild);
+          for (var i = 0; i < nodes.length; i++) app.appendChild(nodes[i]);
+        }
+
+        // --- Case 1: the user declined, or eBay reported an error -------------
+        if (error) {
+          var declined = [
+            el('h1', 'Sign-in cancelled'),
+            el(
+              'p',
+              'Sign-in was cancelled or failed — you can close this tab and try again in Lister.'
+            ),
+          ];
+          if (errorDescription) {
+            declined.push(el('p', errorDescription, 'muted'));
+          }
+          render(declined);
+          return;
+        }
+
+        // --- Case 2: nothing to act on (someone opened the page directly) -----
+        if (!code) {
+          var home = el('a', 'littlelordgames.com');
+          home.href = 'https://littlelordgames.com';
+          var homeLine = el('p');
+          homeLine.appendChild(home);
+          render([
+            el('h1', 'Nothing to do here'),
+            el('p', 'This page only does something during eBay sign-in from the Lister app.'),
+            homeLine,
+          ]);
+          return;
+        }
+
+        // --- Case 3: success — always render the manual-paste fallback first --
+        var heading = el('h1', 'Almost done');
+        var lead = el(
+          'p',
+          loopbackUrl
+            ? 'Returning you to Lister…'
+            : 'Sign-in complete. Paste this code into Lister to finish.'
+        );
+        var instruction = el(
+          'p',
+          loopbackUrl
+            ? "If Lister doesn't continue automatically, paste this code into the app:"
+            : 'Copy this code:'
+        );
+
+        var codeBox = el('code', code, 'code');
+        codeBox.id = 'code';
+
+        var copyButton = el('button', 'Copy code');
+        copyButton.type = 'button';
+
+        var status = el('span', '', 'status');
+        status.setAttribute('role', 'status');
+
+        var actions = el('div', '', 'actions');
+        actions.appendChild(copyButton);
+
+        var returnButton = null;
+        if (loopbackUrl) {
+          returnButton = el('button', 'Return to Lister', 'secondary');
+          returnButton.type = 'button';
+          actions.appendChild(returnButton);
+        }
+        actions.appendChild(status);
+
+        var expiry = null;
+        var expiresIn = parseInt(params.get('expires_in'), 10);
+        if (isFinite(expiresIn) && expiresIn > 0) {
+          expiry = el(
+            'p',
+            'This code expires in about ' + Math.round(expiresIn / 60) + ' minutes.',
+            'muted'
+          );
+        }
+
+        var success = [heading, lead, instruction, codeBox, actions];
+        if (expiry) success.push(expiry);
+        render(success);
+
+        // Clipboard API where available; select-the-text everywhere else, so the
+        // manual path never dead-ends.
+        function selectCode() {
+          try {
+            var range = document.createRange();
+            range.selectNodeContents(codeBox);
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+
+        function flash(message) {
+          status.textContent = message;
+          setTimeout(function () {
+            status.textContent = '';
+          }, 3000);
+        }
+
+        copyButton.addEventListener('click', function () {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code).then(
+              function () {
+                flash('Copied ✓');
+              },
+              function () {
+                flash(selectCode() ? 'Press Ctrl/Cmd+C to copy' : 'Select the code above to copy');
+              }
+            );
+            return;
+          }
+          flash(selectCode() ? 'Press Ctrl/Cmd+C to copy' : 'Select the code above to copy');
+        });
+
+        if (loopbackUrl) {
+          returnButton.addEventListener('click', function () {
+            location.replace(loopbackUrl);
+          });
+          // Top-level navigation — NOT fetch/XHR/<img>, which would be blocked as
+          // mixed content. 127.0.0.1 is a secure context, so this is allowed.
+          // The short delay lets the fallback UI paint first.
+          setTimeout(function () {
+            location.replace(loopbackUrl);
+          }, 800);
+        }
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,151 @@
+---
+// Privacy policy for the Lister desktop app. This is the URL entered as the
+// "Privacy Policy URL" against both eBay keysets (Sandbox + Production) when
+// configuring the RuName, so it has to describe the app accurately: local-first
+// processing, encrypted local token storage, and a static callback page that
+// collects nothing. The website itself is covered at /privacy/.
+import PolicyLayout from '../../layouts/PolicyLayout.astro';
+---
+
+<PolicyLayout
+  title="Lister — Privacy Policy"
+  description="How the Lister desktop app handles your data: processed locally, sent only to eBay, with credentials stored encrypted on your own computer."
+  scope="How the Lister desktop app and its eBay sign-in page handle data."
+>
+  <p>
+    <strong>Lister</strong> is a desktop application from LittleLordGames that helps
+    a seller build eBay listings from a folder of photos. It runs on your own computer.
+    This policy explains what it does with your data, and what the eBay sign-in page
+    hosted on littlelordgames.com does.
+  </p>
+
+  <h2>The short version</h2>
+  <ul>
+    <li>Your photos and listing details are processed <strong>locally</strong>, on your machine.</li>
+    <li>
+      The only service they are sent to is <strong>eBay</strong>, and only to create
+      or update your own listings.
+    </li>
+    <li>
+      Your eBay credentials and sign-in tokens are stored <strong>encrypted on your
+      computer</strong>, using your operating system's secure store. They are never
+      sent to littlelordgames.com.
+    </li>
+    <li>
+      The sign-in page on this site is a <strong>static page</strong>. It does not
+      collect, store, log, or transmit your authorization code — there is no server
+      behind it to receive one.
+    </li>
+    <li>Nothing is sold or shared with third parties.</li>
+  </ul>
+
+  <h2>What Lister processes on your computer</h2>
+  <p>
+    Lister reads the folder of images you point it at and the listing details you
+    type in — titles, descriptions, prices, quantities, and part names. Images are
+    resized and prepared locally, in a working folder on your own machine. All of
+    this stays on your computer unless and until you choose to publish a listing.
+  </p>
+
+  <h2>What is sent to eBay</h2>
+  <p>When you publish, Lister sends the following to eBay on your behalf:</p>
+  <ul>
+    <li>
+      <strong>Your prepared images</strong>, uploaded to eBay's own picture hosting
+      so the listing can reference them. Images are not hosted by LittleLordGames or
+      by anyone else.
+    </li>
+    <li>
+      <strong>Your listing details</strong> — title, description, prices,
+      quantities, and variations — submitted to eBay's selling APIs under your own
+      eBay account.
+    </li>
+  </ul>
+  <p>
+    Once data reaches eBay it is governed by eBay's own terms, including its
+    <a
+      href="https://www.ebay.co.uk/help/policies/member-behaviour-policies/user-privacy-notice-privacy-policy?id=4260"
+      target="_blank"
+      rel="noopener noreferrer">User Privacy Notice</a
+    >.
+  </p>
+
+  <h2>Your eBay credentials and tokens</h2>
+  <p>
+    To use Lister you supply your own eBay developer credentials and sign in to
+    your eBay account. Your application credentials, your redirect name (RuName),
+    and the OAuth access and refresh tokens issued by eBay are stored
+    <strong>only on your own computer</strong>, encrypted through your operating
+    system's secure store — Keychain on macOS, DPAPI on Windows, or libsecret on
+    Linux.
+  </p>
+  <p>
+    If your operating system cannot provide that encryption, Lister keeps these
+    values in memory for that session only and tells you so, rather than writing
+    them to disk unprotected.
+  </p>
+  <p>
+    These credentials and tokens are never transmitted to littlelordgames.com, to
+    LittleLordGames, or to any third party. They go only to eBay, as part of
+    signing in and making requests on your behalf.
+  </p>
+
+  <h2>The eBay sign-in page on this site</h2>
+  <p>
+    eBay requires the page it returns you to after sign-in to be served over
+    HTTPS, which a desktop application cannot provide by itself. So
+    littlelordgames.com hosts a single static page that acts as the bridge back to
+    the app running on your computer.
+  </p>
+  <p>That page:</p>
+  <ul>
+    <li>
+      reads the short-lived authorization code that eBay puts in the address bar,
+      and forwards your browser to the copy of Lister listening on your own machine
+      (<code>127.0.0.1</code>) so it can complete sign-in;
+    </li>
+    <li>
+      shows you the same code with a copy button, in case you need to paste it into
+      the app by hand;
+    </li>
+    <li>
+      removes the code from the address bar and from your browser history once it
+      has done so.
+    </li>
+  </ul>
+  <p>
+    It is a single self-contained HTML file. It loads no scripts, fonts, styles,
+    images, or analytics from anywhere, sets no cookies, and makes no requests of
+    its own. Your authorization code is never sent to a LittleLordGames server —
+    the page is static, so there is no server-side component that could receive,
+    log, or store it. The code is exchanged for tokens by the app on your computer,
+    talking directly to eBay.
+  </p>
+
+  <h2>Analytics and cookies</h2>
+  <p>
+    The Lister application contains no analytics or telemetry, and does not report
+    your usage anywhere. The eBay sign-in page loads no analytics and sets no
+    cookies.
+  </p>
+  <p>
+    This page you are reading now is part of the littlelordgames.com website,
+    which counts page views using a cookieless analytics service. That is described
+    in the <a href="/privacy/">website privacy policy</a>.
+  </p>
+
+  <h2>Third parties</h2>
+  <p>
+    Your data is not sold, rented, or shared. Apart from eBay — the service you are
+    deliberately listing on — no third party receives your images, listing details,
+    credentials, or tokens.
+  </p>
+
+  <h2>Deleting your data</h2>
+  <p>
+    Because everything lives on your own computer, you remove it by signing out in
+    Lister (which discards the stored tokens), deleting the app's data folder, or
+    uninstalling the app. You can also revoke Lister's access at any time from your
+    eBay account settings.
+  </p>
+</PolicyLayout>

@@ -1,0 +1,94 @@
+---
+// Site-wide privacy policy for littlelordgames.com. Covers the website only —
+// the Lister desktop app has its own policy at /lister/privacy/ (that is the URL
+// given to eBay), and the two are written to complement rather than repeat each
+// other.
+import PolicyLayout from '../layouts/PolicyLayout.astro';
+import { SITE } from '../site.config';
+---
+
+<PolicyLayout
+  title="Privacy Policy"
+  description="How littlelordgames.com handles data: no accounts, no cookies, cookieless analytics only."
+  scope="How this website handles data. The Lister desktop app is covered separately."
+>
+  <h2>The short version</h2>
+  <ul>
+    <li>This is a static site. There are no accounts, comments, forms, or purchases here.</li>
+    <li>It sets no cookies.</li>
+    <li>
+      It uses <strong>GoatCounter</strong> for cookieless visitor counts. No personal
+      data is stored and no profile is built.
+    </li>
+    <li>Nothing you do here is sold or shared with advertisers.</li>
+  </ul>
+
+  <h2>What is collected</h2>
+  <p>
+    Every page on this site is a pre-built HTML file. There is nothing to sign in
+    to and nothing that asks you for personal information, so the site itself
+    collects none.
+  </p>
+  <p>
+    Like any web server, the host records standard request logs (for example the
+    page requested and the time) for reliability and security purposes. Those
+    logs are not used to build profiles of visitors.
+  </p>
+
+  <h2>Analytics</h2>
+  <p>
+    Page views are counted with
+    <a
+      href="https://www.goatcounter.com/"
+      target="_blank"
+      rel="noopener noreferrer">GoatCounter</a
+    >, a privacy-focused analytics service. It sets no cookies and does not track
+    visitors across sites. It records the page viewed, the referring page,
+    approximate browser and screen size, and country — and does not store IP
+    addresses. See
+    <a
+      href="https://www.goatcounter.com/help/privacy"
+      target="_blank"
+      rel="noopener noreferrer">GoatCounter's privacy statement</a
+    > for the detail.
+  </p>
+  <p>
+    Because no cookies are involved and no personal data is retained, there is no
+    consent banner to click through.
+  </p>
+
+  <h2>Cookies and browser storage</h2>
+  <p>This site sets no cookies. It uses your browser's local storage for one thing:</p>
+  <dl>
+    <dt><code>theme</code></dt>
+    <dd>
+      Remembers whether you chose the light or dark colour scheme, so the page
+      doesn't flash the wrong one on your next visit. It stays in your browser
+      and is never transmitted anywhere.
+    </dd>
+  </dl>
+
+  <h2>Fonts, search, and other assets</h2>
+  <p>
+    Fonts are served from this site rather than a font CDN, so loading a page
+    doesn't announce your visit to a third party. Site search runs entirely in
+    your browser — search queries are never sent to a server.
+  </p>
+
+  <h2>Links out</h2>
+  <p>
+    Some pages link to the LittleLordGames <a
+      href={SITE.ebayStoreUrl}
+      target="_blank"
+      rel="noopener noreferrer">eBay store</a
+    > and to other sites. Once you follow a link, that site's own privacy policy
+    applies.
+  </p>
+
+  <h2>The Lister desktop app</h2>
+  <p>
+    <a href="/lister/privacy/">Lister</a> is a desktop application for creating eBay
+    listings. It runs on your own computer and is covered by its own policy, which
+    also describes the static eBay sign-in page hosted on this domain.
+  </p>
+</PolicyLayout>

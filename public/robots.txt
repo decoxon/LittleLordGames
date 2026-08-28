@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+# OAuth callback bridge for the Lister app — only meaningful mid-sign-in.
+Disallow: /lister/oauth-callback/
 
 Sitemap: https://littlelordgames.com/sitemap-index.xml

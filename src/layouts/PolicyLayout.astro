@@ -1,0 +1,94 @@
+---
+// Shared chrome for the two privacy policies (/privacy and /lister/privacy) so
+// they stay visually and structurally in step. Both are ordinary site pages —
+// the standalone OAuth callback page in public/ deliberately shares nothing.
+import BaseLayout from './BaseLayout.astro';
+import { SITE } from '../site.config';
+import { formatDate } from '../lib/posts';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Short line under the heading saying what this policy covers. */
+  scope: string;
+}
+const { title, description, scope } = Astro.props;
+
+// Noon UTC so the rendered date can't slip a day on a build machine behind UTC.
+const effective = formatDate(new Date(`${SITE.privacyEffectiveDate}T12:00:00Z`));
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="policy">
+    <header class="policy__header">
+      <h1>{title}</h1>
+      <p class="policy__scope">{scope}</p>
+      <p class="policy__meta">Effective {effective}</p>
+    </header>
+
+    <slot />
+
+    <footer class="policy__footer">
+      <p>
+        Questions about privacy? Email
+        <a href={`mailto:${SITE.privacyContact}`}>{SITE.privacyContact}</a>.
+      </p>
+      <p>
+        This policy may be updated; the effective date above changes when it
+        does.
+      </p>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .policy {
+    padding-block: var(--space-8);
+  }
+  .policy__header {
+    margin-bottom: var(--space-8);
+  }
+  .policy__scope {
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-2);
+  }
+  .policy__meta {
+    font-family: var(--font-pixel-soft);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .policy :global(h2) {
+    margin-block: var(--space-8) var(--space-3);
+  }
+  .policy :global(ul) {
+    padding-left: 1.4em;
+  }
+  .policy :global(li + li) {
+    margin-top: var(--space-2);
+  }
+  .policy :global(a) {
+    text-decoration: underline;
+  }
+  .policy :global(dl) {
+    margin-block: 0 var(--space-4);
+  }
+  .policy :global(dt) {
+    font-weight: 700;
+    margin-top: var(--space-3);
+  }
+  .policy :global(dd) {
+    margin-inline: 0;
+    color: var(--color-text-muted);
+  }
+  .policy__footer {
+    margin-top: var(--space-12);
+    padding-top: var(--space-4);
+    border-top: 2px dashed var(--color-border);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .policy__footer p {
+    margin-bottom: var(--space-2);
+  }
+</style>

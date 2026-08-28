@@ -17,6 +17,13 @@ export const SITE = {
    * to enable.
    */
   goatCounterAccount: 'littlelordgames',
+  /** Published contact for privacy questions (see /privacy and /lister/privacy). */
+  privacyContact: 'privacy@littlelordgames.com',
+  /**
+   * Effective date shown on both privacy pages (ISO). Bump when the policies
+   * change in substance.
+   */
+  privacyEffectiveDate: '2026-08-28',
   /** Numbered pagination size for the home + tag feeds. */
   postsPerPage: 10,
   /** Default social-preview image (in /public), used when a post has no hero. */
